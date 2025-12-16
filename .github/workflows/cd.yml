@@ -1,0 +1,22 @@
+name: CD MERN
+
+on:
+ push:
+   branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: deploy via ssh
+        uses: appleboy/ssh-action@v1
+        with: 
+           host: ${{secrets.ec2_host}}
+           username: ${{secrets.ec2_user}}
+           key: ${{secrets.aws_key}}
+           script: | 
+             cd azar-mern-proj
+             git pull origin main
+             docker-compose down
+             docker-compose up --build -d
